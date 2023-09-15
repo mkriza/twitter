@@ -13,11 +13,9 @@ RSpec.describe Tweet, type: :model do
       )
       expect(tweet).to be_valid
     end
-
   end
 
-  context "invalid data" do
-
+  context 'invalid data' do
     it 'does not have a user' do
       tweet = Tweet.create(
         content: 'content'
@@ -37,7 +35,6 @@ RSpec.describe Tweet, type: :model do
       )
 
       expect(tweet).to_not be_valid
-
     end
     it 'has empty content' do
       tweet = Tweet.create(

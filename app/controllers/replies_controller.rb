@@ -10,9 +10,7 @@ class RepliesController < ApplicationController
 
   def new
     Reply.new
-    respond_to do |format|
-      format.js
-    end
+    respond_to(&:js)
   end
 
   def create

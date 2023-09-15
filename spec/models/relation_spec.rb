@@ -35,7 +35,7 @@ RSpec.describe Relation, type: :model do
     end
 
     it 'is not unique' do
-      first_relation = Relation.create(
+      Relation.create(
         follower: current_user,
         followee: other_user
       )
