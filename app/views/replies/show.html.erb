@@ -1,0 +1,111 @@
+<body>
+<div class="tweet-show-div">
+
+  <div id='name'>
+        <span onclick="event.stopPropagation();">
+          <%= user_avatar(@reply.user, '50px') %>
+          <span><%= link_to @reply.user.name, user_path(@reply.user_id), class: "link-dark name" %>
+            <small>@<%= @reply.user.username %></small></span>
+        </span>
+    <p><%= @reply.content %></p>
+  </div>
+  <div id='buttons show'>
+    <div id='button'>
+      <div id="reply">
+        <%= button_to new_reply_reply_path(@reply), method: :get, :remote => true, class: 'reply_button' do %>
+          <i class="bi bi-chat"></i>
+        <% end %>
+      </div>
+      <div id="count"><%= @reply.replies.count %></div>
+    </div>
+    <% like = @reply.likes.find_by(user_id: current_user) %>
+    <div id='button'>
+      <div id="like">
+        <% if like.present? %>
+          <%= button_to like_path(like), method: :delete, class: 'like_button' do %>
+            <i class="bi bi-heart-fill"></i>
+
+          <% end %>
+        <% else %>
+          <%= button_to reply_likes_path(@reply), class: 'like_button' do %>
+            <i class="bi bi-heart"></i>
+
+          <% end %>
+        <% end %>
+      </div>
+      <div id="count"> <%= @reply.likes.count %></div>
+    </div>
+
+    <div id='button'>
+      <div class="dropdown" id="like">
+        <% retweet = (@reply.retweets.find_by(user_id: current_user)) && (@reply.retweets.find_by(content: nil)) %>
+        <% if retweet.present? %>
+          <button class="retweet_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-arrow-repeat" style="color: #3ba954"></i>
+
+          </button>
+        <% else %>
+          <button class="retweet_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-arrow-repeat"></i>
+
+          </button>
+        <% end %>
+        <div id="count"> <%= @reply.retweets.count %></div>
+
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <% if retweet.present? %>
+            <li id="dropdown-button">
+              <%= button_to tweet_path(retweet), method: :delete, class: "dropdown-item", type: "button" do %>
+                <i class="bi bi-arrow-repeat" style="color: #3ba954"></i>&ensp;Undo Retweet
+              <% end %>
+            </li>
+          <% else %>
+            <li id="dropdown-button">
+              <%= form_with(model: Tweet) do |form| %>
+                <%= form.hidden_field :source_type, value: 'Reply' %>
+                <%= form.hidden_field :source_id, value: @reply.id %>
+                <%= button_tag class: "dropdown-item" do %>
+                  <i class="bi bi-arrow-repeat"></i>&ensp;Retweet
+                <% end %>
+              <% end %>
+            </li>
+          <% end %>
+
+          <li id="dropdown-button">
+            <%= button_to new_tweet_path, params: { source_id: @reply.id, source_type: 'Reply' }, method: :get, class: "dropdown-item", type: "button", data: { toggle: 'modal', target: "#modal-window" }, remote: true do %>
+              <i class="bi bi-pencil"></i>&ensp;Quote Tweet
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id='button'>
+      <div class="dropdown" id="like">
+        <button class="reply_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-box-arrow-up"></i>
+
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <li id="dropdown-button">
+            <button class="dropdown-item" type="button">
+              <i class="bi bi-bookmark-plus"></i>&ensp;Bookmark
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
+  </div>
+</div>
+<body/>
+
+<div class="show-reply-form">
+  <%= render partial: 'replies/form', locals: { reply: @reply, replyable: @reply } %>
+</div>
+
+<%= render @reply.replies.order('created_at DESC') %><br>

@@ -1,0 +1,14 @@
+<div class="reply-form">
+  <%= form_for([replyable, Reply.new]) do |form| %>
+    <span id="avatar">
+    <%= user_avatar(current_user, '50px') %>
+    </span>
+    <div class="field" style="  margin-left: 10px; margin-right: 30px;">
+      <%= form.text_area :content, placeholder: "Tweet your reply", class: "form-control tweet-field" %>
+    </div>
+
+    <div class="actions" style="padding: 15px">
+      <%= form.submit "Reply", class: "btn btn-secondary" %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,27 @@
+<h5 >Create a group</h5>
+<small>Add people</small>
+
+<%= form_with(model: Conversation) do |f| %>
+  <%= f.hidden_field :private, value: false %>
+
+  <%= collection_check_boxes(:conversation, :user_ids, @users, :id, :name) do |b| %>
+    <%= b.label :class => "users-label" do %>
+      <div id='group-users'>
+      <span id="object"><%= user_avatar(b.object,'50px' ) %>
+       <span class= "link-dark name"><%= b.object.name  %></span>
+       <p><small>@<%= b.object.username  %></small></p></span>
+       <span id="check-box"><%= b.check_box class:"form-check-input me-1"  %></span>
+      </div>
+
+    <%end %> <br>
+  <%end %>
+
+<div  id="topic">
+  <%= f.text_field :topic , placeholder: 'Group name', class: 'form-control'%>
+  <%= f.button 'Create group', class: 'btn btn-dark'%>
+  </div>
+<% end %>
+
+
+
+

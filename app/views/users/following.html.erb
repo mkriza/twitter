@@ -1,0 +1,23 @@
+<% if @following.present? %>
+  <ul class="nav nav-pills nav-fill" style="margin-bottom: 10px">
+    <li class="nav-item">
+      <a class="nav-link link-secondary name" aria-current="page" href="/users/<%= @user.id %>/followers"><h6><strong>Followers</strong></h6></a>
+    </li>
+    <li class="nav-item active">
+      <a class="nav-link link-dark name" href="/users/<%= @user.id %>/following"><h6><strong>Following</strong></h6></a>
+    </li>
+  </ul>
+  <div >
+
+
+    <% @following.to_ary.each do |user| %>
+      <%relation = user.followers.find_by(follower: current_user) %>
+      <div id='follow-users'>
+      <span id="user-avatar"><%= user_avatar(user,'50px' ) %>
+        <span class= "link-dark name"><%= user.name  %></span>
+       <p><small>@<%= user.username  %></small></p></span>
+        <span id="check-box"><%= button_to 'Following', relation_path(relation.id), method: :delete, class: "btn btn-profile" %></span>
+      </div>
+    <% end %>
+  </div>
+<% end %>

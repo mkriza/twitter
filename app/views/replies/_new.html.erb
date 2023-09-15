@@ -1,0 +1,14 @@
+<div class="modal-header">
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+  <div id='name'>
+        <span>
+          <%= user_avatar(@replyable.user, '50px') %>
+          <span class="name-span"><%= link_to @replyable.user.name, user_path(@replyable.user_id), class: "link-dark name" %>
+            <small>@<%= @replyable.user.username %></small></span>
+        </span>
+    <p><%= @replyable.content %></p>
+  </div>
+  <div class="modal-form"><%=render 'form',  replyable: @replyable ,reply: @reply %></div>
+</div>

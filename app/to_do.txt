@@ -1,0 +1,15 @@
+To do:
+Active storage
+Modals
+Chat
+Followers/following meber
+User page
+Bookmark links
+To do:
+Active storage
+Modals
+Chat
+Followers/following meber
+User page (tabs)
+Bookmark links
+Login page

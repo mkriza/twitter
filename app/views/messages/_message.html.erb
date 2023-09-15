@@ -1,0 +1,6 @@
+<div class="<%= message.user == current_user ? "sent":"reply"%>">
+  <div class="message">
+<%= message.content %>
+  </div>
+    <div class="user-name" style="<%= (message.user == current_user || message.conversation.private?) ? 'display: none':'' %>"><%= message&.user&.name%></div>
+</div>

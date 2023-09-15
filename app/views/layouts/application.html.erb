@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twitter</title>
+    <%= favicon_link_tag 'img.png' %>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload', defer: false  %>
+
+
+  </head>
+
+  <body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-3 h-scroll">
+        <div class="b-example-divider"></div>
+        <div class="d-flex flex-column flex-shrink-0 p-1 bg-white" style="width: 355px;">
+          <ul class="nav nav-pills flex-column mb-auto" style="align-content: center; ">
+            <li style="padding-left: 2px; padding-top: 10px; padding-bottom: 5px">
+
+              <a href="<%=root_path %>" class="logo"  >
+                <i class="bi bi-twitter" style="color: #1DA1F2; font-size: 2rem; vertical-align: middle"></i>
+
+              </a>
+            </li>
+
+            <li>
+              <div class="nav-item" id="nav-item">
+                <% if current_page?('/') %>
+                  <a href="/" class="nav-link link-dark " aria-current="page">
+                    <i class="bi bi-house-heart-fill" style="font-size: 25px; vertical-align: middle"></i>
+
+                    &ensp;&ensp;<span id="nav_link"><strong><%= t('.home') %></strong></span>
+                    </a>
+                  <% else %>
+                  <a href="/" class="nav-link link-dark">
+                    <i class="bi bi-house" style="font-size: 25px; vertical-align: middle"></i>
+                    &ensp;&ensp;<span id="nav_link"><%= t('.home') %></span>
+                  </a>
+                <% end %>
+              </div>
+            </li>
+            <li>
+              <div class="nav-item">
+                <% if controller.controller_name == 'notifications' %>
+                  <a href="/notifications" class="nav-link link-dark">
+                        <i class="bi bi-bell-fill" style="font-size: 25px; vertical-align: middle"></i>
+                        &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><strong><%= t('.notifications') %></strong></span>
+                  </a>
+                <% else %>
+                  <a href="/notifications" class="nav-link link-dark">
+                    <i class="bi bi-bell" style="font-size: 25px; vertical-align: middle"></i>
+                    &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><%= t('.notifications') %></span>
+                  </a>
+                <% end %>
+              </div>
+            </li>
+
+
+            <li>
+              <div class="nav-item">
+                <% if controller.controller_name == 'conversations' %>
+                  <a href="/conversations" class="nav-link link-dark">
+                    <i class="bi bi-envelope-fill" style="font-size: 25px; vertical-align: middle"></i>
+                    &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><strong><%= t('.messages') %></strong></span>
+                  </a>
+                <% else %>
+                  <a href="/conversations" class="nav-link link-dark">
+                    <i class="bi bi-envelope" style="font-size: 25px; vertical-align: middle"></i>
+                    &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><%= t('.messages') %></span>
+                  </a>
+                <% end %>
+              </div>
+            </li>
+
+
+
+            <li>
+              <div class="nav-item">
+                <% if controller.controller_name == 'bookmarks' %>
+                  <a href="/boomarks" class="nav-link link-dark">
+                    <i class="bi bi-bookmark-fill" style="font-size: 25px; vertical-align: middle"></i>
+                    &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><strong><%= t('.bookmarks') %></strong></span>
+                  </a>
+                <% else %>
+                  <a href="/bookmarks" class="nav-link link-dark">
+                    <i class="bi bi-bookmark" style="font-size: 25px; vertical-align: middle"></i>
+                    &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><%= t('.bookmarks') %></span>
+                  </a>
+                <% end %>
+              </div>
+            </li>
+
+            <li>
+              <div class="nav-item">
+                <% if user_signed_in? %>
+                  <%if current_page?(user_path(current_user)) %>
+                    <a href="/users/<%=current_user.id %>" class="nav-link link-dark">
+                      <i class="bi bi-person-fill" style="font-size: 25px; vertical-align: middle"></i>
+                      &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><strong><%= t('.profile') %></strong></span>
+                    </a>
+                  <% else %>
+                    <a href="/users/<%=current_user.id %>" class="nav-link link-dark">
+                      <i class="bi bi-person" style="font-size: 25px; vertical-align: middle"></i>
+                      &ensp;&ensp;<span id="nav_link" style="vertical-align: middle"><%= t('.profile') %></span>
+                    </a>
+                  <%end %>
+                <%end %>
+              </div>
+            </li>
+
+            <li>
+                <button type="button" class="btn btn-primary" href="<%= new_tweet_path %>" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  <span style="font-size: large"><%= t('.tweet') %></span>
+                </button>
+            </li>
+
+            <div id="modal-window" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content"></div>
+              </div>
+            </div>
+
+            <li class="user">
+              <% if user_signed_in? %>
+                <div class="nav-item" style="height: 63px; border-radius: 30px;">
+                  <div class="btn-group dropup">
+                    <button type="button" class="btn login" data-bs-toggle="dropdown" aria-expanded="false" style="text-align: left;">
+                      <%= user_avatar(current_user ,'40px') %>
+                      <span id='name' style="font-size: 15px;padding: unset; padding-left: 5px" ><%=current_user.name %> </span>
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li>
+                        <p class="dropdown-header" style="margin-top: -30px"><strong><%=current_user.name %></strong><br><small>@<%=current_user.username %></small></p>
+                      </li>
+
+                      <li id="dropdown-button" >
+                        <button class="dropdown-item" type="button">
+                          <%= link_to destroy_user_session_path, method: :delete, class:'link-dark username' do%> &ensp;
+                            Log out <small>@<%=current_user.username %></small>
+                            <% end %>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              <% end %>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="col-lg-5 col-md-8 col-sm-8 offset-3 border-top-0">
+        <div class="row col-lg-5 col-md-8 col-sm-8">
+          <nav class="navbar position-fixed navbar-expand-lg navbar-light nav-home" >
+            <div class="col-lg-5 col-md-8 col-sm-8">
+              <% if  controller.controller_name == "application"%>
+                <a class="navbar-brand" href="/"><strong>Home</strong></a>
+              <% else %>
+                <span class="navbar-brand"><strong><%= controller.controller_name.capitalize %></strong></span>
+                  <% if controller.controller_name == 'messages'%>
+                  <% if @conversation.private?%>
+                    <% user = ConversationUser.where(conversation: @conversation).and(ConversationUser.where.not(user: current_user)).last.user %>
+                    <div id='message-user'>
+                    <span id="user-avatar"><%= user_avatar(user,'40px' ) %>
+                      <span class= "link-dark name"><%= user.name  %></span>
+                      <p><small>@<%= user.username  %></small></p></span>
+                    </div>
+                <% else %>
+                  <div id='name'>
+                    <%= image_tag('group.png', width: '50px', height: '50px', class: 'rounded-circle group') %>
+                    <span class="link-dark name"><%= @conversation.topic %></span>
+                  </div>
+                <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          </nav>
+        </div>
+        <main class='<%= controller.controller_name %>' style="padding-top: 60px;">
+        <%= yield %>
+          </main>
+      </div>
+
+      <div class="col-lg-4 col-md-0 col-sm-0" >
+        <div class="who_to_follow">
+        <%= render partial: 'layouts/who_to_follow' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="modal-form"><%= render 'tweets/form', tweet: @tweet %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</html>
+
+
+<div id="modal-holder"></div>

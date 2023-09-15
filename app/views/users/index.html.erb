@@ -1,0 +1,15 @@
+
+
+<% @users.each do |user| %>
+  <%relation = user.followers.find_by(follower: current_user) %>
+  <div id='follow-users'>
+      <span id="user-avatar"><%= user_avatar(user,'50px' ) %>
+        <span class= "link-dark name"><%= user.name  %></span>
+       <p><small>@<%= user.username  %></small></p></span>
+
+
+    <span id="check-box"><%= render partial: 'follow_button', locals: { user: user, relation: relation} %></span>
+
+  </div>
+<% end %>
+

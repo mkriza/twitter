@@ -1,0 +1,23 @@
+<% @bookmarks.each do |bookmark| %>
+  <% if bookmark.source.class == Tweet %>
+    <% path = tweet_path(bookmark.source.id) %>
+  <% elsif bookmark.source.class == Reply %>
+    <% path = reply_path(bookmark.source.id) %>
+  <% end %>
+
+  <%= button_to path, method: :get, class: 'user-button' do %>
+
+    <div id='name'>
+      <%= user_avatar(bookmark.source.user, '50px') %>
+      <span>
+        <strong>
+          <%= link_to bookmark.source.user.name, user_path(bookmark.source.user_id), class: "link-dark name" %>
+        </strong>
+        <small>&ensp;@<%= bookmark.source.user.username %></small>
+      </span>
+      <br>
+      <p><%= bookmark.source.content %></p>
+    </div>
+  <% end %>
+<% end %>
+

@@ -1,0 +1,8 @@
+<div id="chatroom_data" data-current-user="<%= current_user.id %>" data-current-chatroom="<%= @conversation.id %>">
+  <div id="scroll-msgs">
+    <div id='msg-div'>
+      <%= render @messages %>
+    </div>
+  </div>
+  <%= render partial: 'form', locals: { message: @message } %>
+</div>

@@ -1,0 +1,15 @@
+<% if @users_to_follow.present? %>
+
+<div >
+<h5>Who to follow</h5>
+
+    <% @users_to_follow.to_ary.take(3).each do |user| %>
+    <div id='follow-users'>
+      <span id="user-avatar"><%= user_avatar(user,'50px' ) %>
+        <span class= "link-dark name"><%= user.name  %></span>
+       <p><small>@<%= user.username  %></small></p></span>
+      <span id="check-box"><%= button_to 'Follow', user_relations_path(user), method: :post, class: "btn btn-profile" %></span>
+    </div>
+   <% end %>
+</div>
+<% end %>

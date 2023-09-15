@@ -1,0 +1,63 @@
+<p id="notice"><%= notice %></p>
+
+<div class="conversations">
+  <% @conversations.each do |conversation| %>
+    <% if conversation.conversation_users.map(&:user_id).include? current_user.id %>
+      <%= button_to conversation_messages_path(conversation), method: :get, class: 'user-button' do %>
+        <% if conversation.private? %>
+          <div id='name'>
+            <% other_user = ConversationUser.where(conversation: conversation).and(ConversationUser.where.not(user: current_user)).last.user %>
+            <%= user_avatar(other_user, '50px') %>
+            <span><span class="link-dark name"><%= other_user.name %></span>
+          <small>@<%= other_user.username %></small></span>
+            <% if conversation.messages.any? %>
+              <p><small><%= conversation.messages.last.content %></small></p>
+            <% end %>
+          </div>
+        <% else %>
+          <div id='name'>
+            <%= image_tag('group.png', width: '50px', height: '50px', class: 'rounded-circle group') %>
+            <span class="link-dark name"><%= conversation.topic %></span>
+            <% if conversation.messages.any? %>
+              <p><small><%= conversation.messages.last.user.name %>: <%= conversation.messages.last.content %></small>
+              </p>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<button type="button" class="btn btn-primary" id='modal-button' data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+  <span><%= t('.new_message') %></span>
+</button>
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title new-message" id="staticBackdropLabel"><%= t('.new_message') %></h5>
+      </div>
+      <div class="modal-body">
+        <%= button_to new_group_conversations_path(locale: I18n.locale) ,params: {:private => false }, method: :get, class:'user-button' do%>
+          <div id='name'>
+            <%= image_tag('group.png', width: '50px', height: '50px', class: 'rounded-circle group') %>
+            <span class= "name blue"><%= t('.create_a_group') %></span>
+          </div>
+        <% end %>
+
+        <% @users.each do |user| %>
+          <%=button_to conversations_path, params: {user_ids: [user.id]}, method: :post, class: 'user-button' do%>
+              <div id='name'>
+                  <%= user_avatar(user,'50px' ) %>
+                  <span class= "link-dark name"><%=user.name%></span>
+                    <p><small>@<%= user.username  %></small></p>
+              </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

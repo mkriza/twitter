@@ -1,0 +1,25 @@
+Style/Documentation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Exclude:
+    - bin/bundle
+
+Layout/LineLength:
+  Exclude:
+    - bin/bundle
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - bin/bundle
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - bin/bundle
+
+Layout/EndOfLine:
+  Exclude:
+    - config/initializers/devise.rb
+
+Metrics/BlockLength:
+  IgnoredMethods: ['resource', 'describe', 'context', 'it', 'post', 'get', 'put']

@@ -1,0 +1,22 @@
+<body>
+<span id="profile"><%= user_avatar(@user, '140px') %></span>
+<% if user_signed_in? && current_user.id == @user.id %>
+  <%= button_to "Set up profile", edit_user_registration_path, method: :get, class: "btn btn-profile" %>
+<% else %>
+  <%= render partial: 'follow_button', locals: { user: @user, relation: @relation } %>
+<% end %>
+<h5><strong><%= @user.name %></strong></h5>
+<p>@<%= @user.username %></p>
+
+<div class="following">
+  <%= button_to "Followers", followers_user_path(@user.id), method: :get, class: "btn btn-following" %>
+</div>
+<div class="following">
+  <%= button_to "Following", following_user_path(@user.id), method: :get, class: "btn btn-following" %>
+</div>
+<div>
+  <strong>Tweets</strong>
+  <%= render partial: 'tweets/tweets' %>
+</div>
+</body>
+

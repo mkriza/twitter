@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+  <div class="modal-form">
+    <div class="tweet-form retweet-form">
+      <%= form_with(model: Tweet) do |form| %>
+        <div id="avatar"></div>
+        <%= user_avatar(current_user, '50px') %>
+
+        <div class="field retweet-field" style="  margin-left: 10px; margin-right: 30px;">
+          <%= form.text_area :content, placeholder: "Add a comment", class: "form-control  tweet-field" %>
+        </div>
+        <%= form.hidden_field :source_type, value: @type %>
+        <%= form.hidden_field :source_id, value: @source_id.id %>
+        <div class='retweet' style="margin-left: 50px;">
+          <div id='name'>
+            <span onclick="event.stopPropagation();">
+              <%= user_avatar(@source_id.user, '20px') %>
+              <%= link_to @source_id.user.name, user_path(@source_id.user_id), class: "link-dark name" %>
+              <small>@<%= @source_id.user.username %></small>
+            </span>
+          </div>
+          <p style="padding-left: 36px; padding-top: 10px"><%= @source_id.content %></p>
+        </div>
+        <div class="actions" style="padding: 15px">
+          <%= form.submit "Retweet", class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

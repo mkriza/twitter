@@ -1,0 +1,5 @@
+  <% if  relation.present? %>
+    <%= button_to 'Unfollow', relation_path(relation.id), method: :delete, class: "btn btn-profile" %>
+  <%else %>
+    <%= button_to 'Follow', user_relations_path(user), method: :post, class: "btn btn-profile" %>
+  <%end %>

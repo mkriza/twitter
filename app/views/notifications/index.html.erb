@@ -1,0 +1,10 @@
+<% @notifications.each do |notification| %>
+  <%= button_to path(notification),method: :get, class:'user-button' do %>
+    <div id='name'>
+      <span id="notif-avatar"><%= user_avatar(notification.sender,'35px' ) %></span><br>
+      <span class= "link-dark name"><%= notification.sender.name%></span> <%= text(notification) %> <br>
+      <br><p id='content' ><%=content(notification)%></p>
+    </div>
+  <% end %>
+<% end %>
+

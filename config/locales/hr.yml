@@ -1,0 +1,16 @@
+hr:
+  layouts:
+    application:
+      home: "Naslovnica"
+      notifications: "Obavijesti"
+      messages: "Poruke"
+      bookmarks: "Knjižne oznake"
+      profile: "Profil"
+      tweet: "Objavi Tweet"
+
+  conversations:
+    index:
+      new_message: "Nova Poruka"
+      notifications: "Obavijesti"
+      create_a_group: "Stvaranje grupe"
+

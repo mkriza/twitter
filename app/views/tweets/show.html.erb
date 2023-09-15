@@ -1,0 +1,239 @@
+<body>
+<% if @tweet.original_tweet? || ((@tweet.source_id.present?) && (@tweet.content.present?)) %>
+  <div  class="tweet-show-div">
+
+    <div id='name'>
+        <span onclick="event.stopPropagation();">
+          <%= user_avatar(@tweet.user, '50px') %>
+          <span><%= link_to @tweet.user.name, user_path(@tweet.user_id), class: "link-dark name" %>
+            <small>@<%= @tweet.user.username %></small></span>
+        </span>
+      <p><%= @tweet.content %></p>
+    </div>
+
+    <% if (@tweet.source_id.present?) && (@tweet.content.present?) %>
+      <div class='retweet'>
+        <div id='name'>
+                <span>
+          <%= user_avatar(@tweet.user, '50px') %>
+                  <span><%= link_to @tweet.source.user.name, user_path(@tweet.source.user_id), class: "link-dark name" %>
+                    <small>@<%= @tweet.source.user.username %></small></span>
+                  </span>
+        </div>
+        <p><%= @tweet.source.content %></p>
+
+      </div>
+    <% end %>
+    <div id='buttons show'>
+      <div id='button'>
+        <div id="reply">
+          <%= button_to new_tweet_reply_path(@tweet), method: :get, :remote => true, class: 'reply_button' do %>
+            <i class="bi bi-chat"></i>
+          <% end %>
+        </div>
+        <small id="count"><%= @tweet.replies.count %></small>
+      </div>
+      <% like = @tweet.likes.find_by(user_id: current_user) %>
+      <div id='button'>
+        <div id="like">
+          <% if like.present? %>
+            <%= button_to like_path(like), method: :delete, class: 'like_button' do %>
+              <i class="bi bi-heart-fill"></i>
+            <% end %>
+          <% else %>
+            <%= button_to tweet_likes_path(@tweet), class: 'like_button' do %>
+              <i class="bi bi-heart"></i>
+            <% end %>
+          <% end %>
+        </div>
+        <small id="count"> <%= @tweet.likes.count %></small>
+      </div>
+
+      <div id='button'>
+        <div class="dropdown" id="like">
+          <% retweet = (@tweet.retweets.find_by(user_id: current_user)) && (@tweet.retweets.find_by(content: nil)) %>
+          <% if retweet.present? %>
+            <button class="retweet_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-arrow-repeat" style="color: #3ba954"></i>
+            </button>
+          <% else %>
+            <button class="retweet_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-arrow-repeat"></i>
+            </button>
+          <% end %>
+          <small id="count"> <%= @tweet.retweets.count %></small>
+
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <% if retweet.present? %>
+              <li id="dropdown-button">
+                <%= button_to tweet_path(retweet), method: :delete, class: "dropdown-item", type: "button" do %>
+                  <i class="bi bi-arrow-repeat" style="color: #3ba954"></i>&ensp;Undo Retweet
+                <% end %>
+              </li>
+            <% else %>
+              <li id="dropdown-button">
+                <%= form_with(model: Tweet) do |form| %>
+                  <%= form.hidden_field :source_type, value: 'Tweet' %>
+                  <%= form.hidden_field :source_id, value: @tweet.id %>
+                  <%= button_tag class: "dropdown-item" do %>
+                    <i class="bi bi-arrow-repeat"></i>&ensp;Retweet
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+
+            <li id="dropdown-button">
+              <%= button_to new_tweet_path, params: { source_id: @tweet.id, source_type: 'Tweet' }, method: :get, class: "dropdown-item", type: "button", data: { toggle: 'modal', target: "#modal-window" }, remote: true do %>
+                <i class="bi bi-pencil"></i>&ensp;Quote Tweet
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id='button'>
+        <div class="dropdown" id="like">
+          <button class="reply_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-box-arrow-up"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <li id="dropdown-button">
+              <button class="dropdown-item" type="button">
+                <i class="bi bi-bookmark-plus"></i>&ensp;Bookmark
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% else %>
+  <div>
+    <%= link_to user_path(@tweet.source.user_id), class: "link-dark name_retweet" do %>
+      <small>
+        <i class="bi bi-arrow-repeat" style="font-size: 15px; padding-right: 12px;"></i>
+
+        <%= @tweet.user.name %> Retweeted
+      </small>
+    <% end %>
+  </div>
+
+
+
+  <div class="tweet-show-div">
+
+    <div id='name'>
+        <span>
+          <%= user_avatar(@tweet.source.user, '50px') %>
+          <span><%= link_to @tweet.source.user.name, user_path(@tweet.source.user_id), class: "link-dark name" %>
+            <small>@<%= @tweet.source.user.username %></small></span>
+        </span>
+      <p><%= @tweet.source.content %></p>
+    </div>
+
+    <div id='buttons show'>
+      <div id='button'>
+        <div id="reply">
+          <%= button_to new_tweet_reply_path(@tweet.source), method: :get, :remote => true, class: 'reply_button' do %>
+
+            <i class="bi bi-chat"></i>
+          <% end %>
+        </div>
+        <small id="count"><%= @tweet.replies.count %></small>
+      </div>
+
+      <% like = @tweet.source.likes.find_by(user_id: current_user) %>
+      <div id='button'>
+        <div id="like">
+          <% if like.present? %>
+            <%= button_to like_path(like), method: :delete, class: 'like_button' do %>
+              <i class="bi bi-heart-fill"></i>
+            <% end %>
+          <% else %>
+            <%= button_to tweet_likes_path(@tweet.source), class: 'like_button' do %>
+              <i class="bi bi-heart"></i>
+            <% end %>
+          <% end %>
+        </div>
+        <small id="count"> <%= @tweet.likes.count %></small>
+      </div>
+
+      <div id='button'>
+        <div class="dropdown" id="like">
+          <% retweet = (@tweet.source.retweets.find_by(user_id: current_user)) && (@tweet.source.retweets.find_by(content: nil)) %>
+          <% if retweet.present? %>
+            <button class="retweet_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-arrow-repeat" style="color: #3ba954"></i>
+            </button>
+          <% else %>
+            <button class="retweet_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-arrow-repeat"></i>
+            </button>
+          <% end %>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <% if retweet.present? %>
+              <li id="dropdown-button">
+                <%= button_to tweet_path(retweet.source), method: :delete, class: "dropdown-item", type: "button" do %>
+                  <i class="bi bi-arrow-repeat" style="color: #3ba954"></i>&ensp;Undo Retweet
+                <% end %>
+              </li>
+            <% else %>
+              <li id="dropdown-button">
+                <%= form_with(model: Tweet) do |form| %>
+                  <%= form.hidden_field :source_type, value: 'Tweet' %>
+                  <%= form.hidden_field :source_id, value: @tweet.source.id %>
+
+                  <%= button_tag class: "dropdown-item" do %>
+                    <i class="bi bi-arrow-repeat"></i>&ensp;Retweet
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+
+            <li id="dropdown-button">
+              <%= button_to new_tweet_path, params: { source_id: @tweet.source.id, source_type: 'Tweet' }, method: :get, class: "dropdown-item", type: "button", data: { toggle: 'modal', target: "#modal-window" }, remote: true do %>
+                <i class="bi bi-pencil"></i>&ensp;Quote Tweet
+              <% end %>
+            </li>
+          </ul>
+        </div>
+        <small id="count"> <%= @tweet.source.retweets.count %></small>
+      </div>
+
+      <div id='button'>
+        <div class="dropdown" id="like">
+          <button class="reply_button" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-box-arrow-up"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <li id="dropdown-button">
+              <button class="dropdown-item" type="button">
+                <i class="bi bi-envelope" style="color:rgb(83, 100, 113) "></i>&ensp;Send via Direct Message
+              </button>
+            </li>
+            <li id="dropdown-button">
+              <button class="dropdown-item" type="button">
+                <i class="bi bi-bookmark-plus"></i>&ensp;Bookmark
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+  <div class="show-reply-form"><%=  render partial: 'replies/form', locals: { reply: @reply, replyable: @tweet }  %></div>
+
+
+<% if (@tweet.source_id.present?) && (@tweet.content.nil?) %>
+  <%= render @tweet.source.replies.order('created_at DESC') %><br>
+<% end %>
+<%= render @tweet.replies.order('created_at DESC') %><br>
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content"></div>
+  </div>
+</div>
+</body>
